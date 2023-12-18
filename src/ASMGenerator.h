@@ -16,7 +16,7 @@ public:
     template <typename T>
     inline void mov(const std::string &reg, const T &value)
     {
-        stream << "    mov " << reg << ", " << value << "\n";
+        stream << std::format("    mov {}, {}", reg, value) << "\n";
     }
 
     inline void syscall()

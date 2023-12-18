@@ -34,7 +34,7 @@ std::unique_ptr<Token> Parser::parse_character(const char c)
     }
 }
 
-[[nodiscard]] std::vector<Token> Parser::parseFile()
+std::vector<Token> Parser::parseFile()
 {
     std::ifstream file(filePath);
     if (file.fail())

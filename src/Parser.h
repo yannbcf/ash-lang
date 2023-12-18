@@ -26,7 +26,7 @@ class Parser
 {
 public:
     Parser(const std::string &filePath) : filePath(filePath){};
-    std::vector<Token> parseFile();
+    [[nodiscard]] std::vector<Token> parseFile();
 
 private:
     std::string filePath;
