@@ -43,4 +43,4 @@ private:
 };
 
 static Keyword returnKeyword("return", [](Parser *parser, const std::string &value)
-                             { parser->push_token(Token::RETURN, value); });
+                             { parser->push_token(Token(Token::RETURN, value)); });

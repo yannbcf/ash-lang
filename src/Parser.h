@@ -45,9 +45,9 @@ public:
     Parser(const std::string &file_path) : file_path(file_path){};
     [[nodiscard]] std::vector<Token> parse_file();
 
-    void push_token(Token::Type type, const std::string &value)
+    void push_token(Token token)
     {
-        tokens.push_back(Token(type, value));
+        tokens.push_back(token);
     };
 
 private:
