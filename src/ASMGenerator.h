@@ -16,12 +16,12 @@ public:
     void create_asm(const std::string &file_path, const std::vector<Token> &tokens);
 
     template <typename T>
-    inline void mov(const std::string &reg, const T &value)
+    void mov(const std::string &reg, const T &value)
     {
         stream << std::format("    mov {}, {}", reg, value) << "\n";
     }
 
-    inline void syscall()
+    void syscall()
     {
         stream << "    syscall\n";
     }

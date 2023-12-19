@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#include <vector>
+#include <set>
+
 static std::set<char> CHAR_SET{'\n', '(', ')', ',', ';'};
 
 struct Token
@@ -38,13 +42,17 @@ struct Token
 class Parser
 {
 public:
-    std::vector<Token> tokens{};
+    Parser(const std::string &file_path) : file_path(file_path){};
+    [[nodiscard]] std::vector<Token> parse_file();
 
-    Parser(const std::string &filePath) : filePath(filePath){};
-    [[nodiscard]] std::vector<Token> parseFile();
+    void push_token(Token::Type type, const std::string &value)
+    {
+        tokens.push_back(Token(type, value));
+    };
 
 private:
-    std::string filePath;
+    std::string file_path;
+    std::vector<Token> tokens{};
 
     Token parse_character(const char c);
 };

@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     // }
 
     Parser parser("../../../../examples/0.ash");
-    auto tokens = parser.parseFile();
+    auto tokens = parser.parse_file();
 
     ASMGenerator generator = ASMGenerator();
     generator.create_asm("../../../../out.asm", tokens);

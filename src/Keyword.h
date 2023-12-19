@@ -16,7 +16,6 @@ class Keyword
 
 public:
     using Callback = std::function<void(Parser *, const std::string &)>;
-    Callback callback;
 
     Keyword(const std::string &_name, Callback _callback) : name(_name), callback(_callback)
     {
@@ -33,9 +32,15 @@ public:
         return nullptr;
     }
 
+    void execute_callback(Parser *parser, const std::string &value) const
+    {
+        callback(parser, value);
+    }
+
 private:
     std::string name;
+    Callback callback;
 };
 
 static Keyword returnKeyword("return", [](Parser *parser, const std::string &value)
-                             { parser->tokens.push_back(Token(Token::RETURN, value)); });
+                             { parser->push_token(Token::RETURN, value); });

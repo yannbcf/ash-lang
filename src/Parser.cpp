@@ -18,12 +18,12 @@ Token Parser::parse_character(const char c)
     }
 }
 
-std::vector<Token> Parser::parseFile()
+std::vector<Token> Parser::parse_file()
 {
-    std::ifstream file(filePath);
+    std::ifstream file(file_path);
     if (file.fail())
     {
-        SPDLOG_ERROR("Could not find file at {}", filePath);
+        SPDLOG_ERROR("Could not find file at {}", file_path);
         exit(EXIT_FAILURE);
     }
 
@@ -45,20 +45,17 @@ std::vector<Token> Parser::parseFile()
             continue;
         }
 
-        if (Keyword *keyword = Keyword::Get(buffer); keyword == nullptr)
+        if (Keyword *keyword = Keyword::Get(buffer); keyword != nullptr)
         {
-            if (buffer.size() != 0)
-            {
-                tokens.push_back(Token(Token::VARIABLE, buffer));
-                if (Token token = parse_character(c); token.type != Token::INVALID)
-                {
-                    tokens.push_back(token);
-                }
-            }
+            keyword->execute_callback(this, buffer);
         }
-        else
+        else if (buffer.size() != 0)
         {
-            keyword->callback(this, buffer);
+            tokens.push_back(Token(Token::VARIABLE, buffer));
+            if (Token token = parse_character(c); token.type != Token::INVALID)
+            {
+                tokens.push_back(token);
+            }
         }
 
         buffer.clear();
