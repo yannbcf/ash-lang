@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Parser.h"
 #include <sstream>
+#include <vector>
+
+#include "Parser.h"
 
 class ASMGenerator
 {

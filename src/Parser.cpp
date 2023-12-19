@@ -1,36 +1,20 @@
 #include "stdafx.h"
+#include "Keyword.h"
 #include "Parser.h"
 
-constexpr const char *token_type_to_string(TokenType e) noexcept
-{
-    switch (e)
-    {
-    case TokenType::VARIABLE:
-        return "VARIABLE";
-    case TokenType::ASSIGNMENT:
-        return "ASSIGNMENT";
-    case TokenType::OPEN_PAREN:
-        return "OPEN_PAREN";
-    case TokenType::CLOSE_PAREN:
-        return "CLOSE_PAREN";
-    case TokenType::RETURN:
-        return "RETURN";
-    }
-}
-
-std::unique_ptr<Token> Parser::parse_character(const char c)
+Token Parser::parse_character(const char c)
 {
     switch (c)
     {
     case '(':
-        return std::make_unique<Token>(TokenType::OPEN_PAREN, std::string(1, c));
+        return Token(Token::OPEN_PAREN, std::string(1, c));
     case ')':
-        return std::make_unique<Token>(TokenType::CLOSE_PAREN, std::string(1, c));
+        return Token(Token::CLOSE_PAREN, std::string(1, c));
     case '=':
-        return std::make_unique<Token>(TokenType::ASSIGNMENT, std::string(1, c));
+        return Token(Token::ASSIGNMENT, std::string(1, c));
 
     default:
-        return nullptr;
+        return Token(Token::INVALID);
     }
 }
 
@@ -48,11 +32,11 @@ std::vector<Token> Parser::parseFile()
 
     while (file.get(c))
     {
-        if (!std::isspace(c) && !charSet.contains(c))
+        if (!std::isspace(c) && !CHAR_SET.contains(c))
         {
-            if (auto token = parse_character(c); token != nullptr)
+            if (Token token = parse_character(c); token.type != Token::INVALID)
             {
-                tokens.push_back(*token.get());
+                tokens.push_back(token);
                 buffer.clear();
                 continue;
             }
@@ -61,20 +45,20 @@ std::vector<Token> Parser::parseFile()
             continue;
         }
 
-        if (auto it = keywords.find(buffer); it == keywords.end())
+        if (Keyword *keyword = Keyword::Get(buffer); keyword == nullptr)
         {
             if (buffer.size() != 0)
             {
-                tokens.push_back(Token{.type = TokenType::VARIABLE, .value = buffer});
-                if (auto token = parse_character(c); token != nullptr)
+                tokens.push_back(Token(Token::VARIABLE, buffer));
+                if (Token token = parse_character(c); token.type != Token::INVALID)
                 {
-                    tokens.push_back(*token.get());
+                    tokens.push_back(token);
                 }
             }
         }
         else
         {
-            it->second(buffer);
+            keyword->callback(this, buffer);
         }
 
         buffer.clear();

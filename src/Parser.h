@@ -1,43 +1,50 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <functional>
-#include <set>
-#include <memory>
-
-enum class TokenType
-{
-    VARIABLE,
-    ASSIGNMENT,
-    OPEN_PAREN,
-    CLOSE_PAREN,
-    RETURN,
-};
+static std::set<char> CHAR_SET{'\n', '(', ')', ',', ';'};
 
 struct Token
 {
-    TokenType type;
+    enum Type
+    {
+        VARIABLE,
+        ASSIGNMENT,
+        OPEN_PAREN,
+        CLOSE_PAREN,
+        RETURN,
+        INVALID,
+    };
+
+    std::string type_to_string(Type type)
+    {
+        switch (type)
+        {
+        case Token::VARIABLE:
+            return "VARIABLE";
+        case Token::ASSIGNMENT:
+            return "ASSIGNMENT";
+        case Token::OPEN_PAREN:
+            return "OPEN_PAREN";
+        case Token::CLOSE_PAREN:
+            return "CLOSE_PAREN";
+        case Token::RETURN:
+            return "RETURN";
+        }
+    }
+
+    Type type;
     std::string value;
 };
 
 class Parser
 {
 public:
+    std::vector<Token> tokens{};
+
     Parser(const std::string &filePath) : filePath(filePath){};
     [[nodiscard]] std::vector<Token> parseFile();
 
 private:
     std::string filePath;
 
-    std::vector<Token> tokens{};
-    std::set<char> charSet{'\n', '(', ')', ',', ';'};
-    std::unordered_map<std::string, std::function<void(const std::string &value)>> keywords{
-        {"return", [&](const std::string &value)
-         {
-             tokens.push_back(Token{.type = TokenType::RETURN, .value = value});
-         }}};
-
-    std::unique_ptr<Token> parse_character(const char c);
+    Token parse_character(const char c);
 };

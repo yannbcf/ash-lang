@@ -23,7 +23,7 @@ void ASMGenerator::create_asm(const std::string &file_path, const std::vector<To
 
     for (size_t i = 0; i < tokens.size(); ++i)
     {
-        if (tokens[i].type == TokenType::RETURN && tokens[i + 1].type == TokenType::VARIABLE)
+        if (tokens[i].type == Token::RETURN && tokens[i + 1].type == Token::VARIABLE)
         {
             if (is_number(tokens[i + 1].value))
             {
